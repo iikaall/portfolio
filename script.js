@@ -138,15 +138,7 @@ const fallbackData = {
     ],
     language: ["Bahasa Indonesia", "English", "Arabic"]
   },
-  certifications: [
-    {
-      period: "Isi dari spreadsheet",
-      title: "Sertifikasi atau pelatihan terbaru",
-      subtitle: "Lembaga penerbit",
-      description: "Bagian ini akan otomatis mengikuti data sertifikasi yang kamu isi di Google Sheets.",
-      tags: ["Certificate"]
-    }
-  ],
+  certifications: [],
   gallery: [
     {
       title: "Logo Majlis Ratib",
@@ -479,6 +471,23 @@ const renderContacts = (contacts) => {
   );
 };
 
+const toggleElement = (selector, shouldShow) => {
+  document.querySelectorAll(selector).forEach((element) => {
+    element.hidden = !shouldShow;
+  });
+};
+
+const toggleRenderedSections = (data) => {
+  const hasSkills = Object.values(data.skills).some((group) => group.length);
+
+  toggleElement(".proof-band", data.stats.length > 0);
+  toggleElement("#projects, .nav-links a[href='#projects']", data.projects.length > 0 || data.projectHistory.length > 0);
+  toggleElement("#experience, .nav-links a[href='#experience']", data.work.length > 0 || data.education.length > 0 || hasSkills);
+  toggleElement("#certifications, .nav-links a[href='#certifications']", data.certifications.length > 0);
+  toggleElement("#gallery, .nav-links a[href='#gallery']", data.gallery.length > 0);
+  toggleElement("#contact, .nav-links a[href='#contact']", data.contacts.length > 0);
+};
+
 const renderPortfolio = (data) => {
   setFields(data.settings);
   renderQuickProof(data.settings);
@@ -492,6 +501,7 @@ const renderPortfolio = (data) => {
   renderCertifications(data.certifications);
   renderGallery(data.gallery);
   renderContacts(data.contacts);
+  toggleRenderedSections(data);
   setActiveLink();
 };
 
@@ -551,13 +561,17 @@ const rowsToPortfolio = (rows) => {
     skills: { professional: [], additional: [], language: [] },
     certifications: [],
     gallery: [],
-    contacts: []
+    contacts: [],
+    sourceSections: new Set(),
+    sourceSkillGroups: new Set()
   };
 
   rows.forEach((row) => {
+    const section = normalizeSection(row.section);
+    if (section) data.sourceSections.add(section);
+    if (section === "skill") data.sourceSkillGroups.add(normalizeSkillGroup(row.key));
     if (!isVisible(row.visible)) return;
 
-    const section = normalizeSection(row.section);
     const order = Number(row.order || 9999);
     const title = firstValue(row.title, row.value);
     const description = firstValue(row.description, row.summary, row.ringkasan);
@@ -676,23 +690,32 @@ const rowsToPortfolio = (rows) => {
   return data;
 };
 
+const hasSheetSection = (sheetData, section) => sheetData.sourceSections && sheetData.sourceSections.has(section);
+
+const hasSheetSkillGroup = (sheetData, group) =>
+  sheetData.sourceSkillGroups && sheetData.sourceSkillGroups.has(group);
+
 const mergePortfolio = (sheetData) => ({
   settings: { ...fallbackData.settings, ...sheetData.settings },
-  stats: sheetData.stats.length ? sheetData.stats : fallbackData.stats,
-  work: sheetData.work.length ? sheetData.work : fallbackData.work,
-  education: sheetData.education.length ? sheetData.education : fallbackData.education,
-  projects: sheetData.projects.length ? sheetData.projects : fallbackData.projects,
-  projectHistory: sheetData.projectHistory.length ? sheetData.projectHistory : fallbackData.projectHistory,
+  stats: hasSheetSection(sheetData, "stat") ? sheetData.stats : fallbackData.stats,
+  work: hasSheetSection(sheetData, "work") ? sheetData.work : fallbackData.work,
+  education: hasSheetSection(sheetData, "education") ? sheetData.education : fallbackData.education,
+  projects: hasSheetSection(sheetData, "project") ? sheetData.projects : fallbackData.projects,
+  projectHistory: hasSheetSection(sheetData, "projectHistory")
+    ? sheetData.projectHistory
+    : fallbackData.projectHistory,
   skills: {
-    professional: sheetData.skills.professional.length
+    professional: hasSheetSkillGroup(sheetData, "professional")
       ? sheetData.skills.professional
       : fallbackData.skills.professional,
-    additional: sheetData.skills.additional.length ? sheetData.skills.additional : fallbackData.skills.additional,
-    language: sheetData.skills.language.length ? sheetData.skills.language : fallbackData.skills.language
+    additional: hasSheetSkillGroup(sheetData, "additional")
+      ? sheetData.skills.additional
+      : fallbackData.skills.additional,
+    language: hasSheetSkillGroup(sheetData, "language") ? sheetData.skills.language : fallbackData.skills.language
   },
-  certifications: sheetData.certifications.length ? sheetData.certifications : fallbackData.certifications,
-  gallery: sheetData.gallery.length ? sheetData.gallery : fallbackData.gallery,
-  contacts: sheetData.contacts.length ? sheetData.contacts : fallbackData.contacts
+  certifications: hasSheetSection(sheetData, "certification") ? sheetData.certifications : fallbackData.certifications,
+  gallery: hasSheetSection(sheetData, "gallery") ? sheetData.gallery : fallbackData.gallery,
+  contacts: hasSheetSection(sheetData, "contact") ? sheetData.contacts : fallbackData.contacts
 });
 
 const getSpreadsheetUrl = () => {
@@ -733,7 +756,7 @@ menuLinks.forEach((link) => {
 
 const setActiveLink = () => {
   const offset = header ? header.offsetHeight + 28 : 100;
-  const activeSections = sections.filter((section) => section.getBoundingClientRect().top <= offset);
+  const activeSections = sections.filter((section) => !section.hidden && section.getBoundingClientRect().top <= offset);
   const current = activeSections[activeSections.length - 1];
 
   menuLinks.forEach((link) => {
