@@ -9,6 +9,7 @@ Website portfolio dinamis untuk GitHub Pages. Tampilan tetap diatur oleh HTML/CS
 - `script.js` - renderer dinamis dari data spreadsheet.
 - `site-config.js` - tempat menaruh URL CSV Google Sheets.
 - `spreadsheet-template.csv` - template kolom untuk Google Sheets.
+- `CUSTOMIZE.md` - panduan mengubah warna, posisi foto, dan layout kecil dari spreadsheet.
 - `assets/` - foto profil, screenshot proyek, dan gambar galeri.
 - `.nojekyll` - agar GitHub Pages menyajikan file statis apa adanya.
 

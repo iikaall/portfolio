@@ -12,6 +12,33 @@
   --white: #ffffff;
   --shadow: 0 22px 55px rgba(23, 33, 38, 0.12);
   --radius: 8px;
+  --section-padding: 92px;
+  --hero-grid-line-x: rgba(15, 139, 141, 0.12);
+  --hero-grid-line-y: rgba(15, 139, 141, 0.1);
+  --hero-padding-top: 64px;
+  --hero-padding-bottom: 54px;
+  --hero-dark-height: 42%;
+  --hero-dark-slope: 28%;
+  --hero-gap: clamp(36px, 6vw, 76px);
+  --hero-title-max-size: 6.15rem;
+  --hero-photo-width: 360px;
+  --hero-photo-min-height: 410px;
+  --hero-photo-max-height: 455px;
+  --hero-photo-tablet-min-height: 400px;
+  --hero-photo-mobile-min-height: 340px;
+  --hero-photo-mobile-max-height: 380px;
+  --hero-photo-y: 0px;
+  --hero-photo-scale: 1;
+  --hero-photo-bg-width: 82%;
+  --hero-photo-bg-right: 5%;
+  --hero-photo-bg-bottom: 8%;
+  --hero-photo-bg-color-1: var(--yellow);
+  --hero-photo-bg-color-2: var(--teal);
+  --hero-photo-bg-shadow: 18px 18px 0 var(--coral);
+  --brand-photo-y: 18%;
+  --brand-photo-scale: 1.35;
+  --hero-mobile-padding-top: 48px;
+  --hero-title-mobile-max-size: 4.5rem;
   color-scheme: light;
 }
 
@@ -120,8 +147,8 @@ textarea {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 18%;
-  transform: scale(1.35);
+  object-position: center var(--brand-photo-y);
+  transform: scale(var(--brand-photo-scale));
 }
 
 .brand strong,
@@ -179,10 +206,10 @@ textarea {
   position: relative;
   overflow: hidden;
   min-height: calc(100vh - 74px);
-  padding: 64px 0 54px;
+  padding: var(--hero-padding-top) 0 var(--hero-padding-bottom);
   background:
-    linear-gradient(90deg, rgba(15, 139, 141, 0.12) 0 1px, transparent 1px 100%),
-    linear-gradient(0deg, rgba(15, 139, 141, 0.1) 0 1px, transparent 1px 100%),
+    linear-gradient(90deg, var(--hero-grid-line-x) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, var(--hero-grid-line-y) 0 1px, transparent 1px 100%),
     var(--paper);
   background-size: 42px 42px;
 }
@@ -191,9 +218,9 @@ textarea {
   content: "";
   position: absolute;
   inset: auto 0 0 0;
-  height: 42%;
+  height: var(--hero-dark-height);
   background: var(--ink);
-  clip-path: polygon(0 28%, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 var(--hero-dark-slope), 100% 0, 100% 100%, 0 100%);
 }
 
 .hero-grid {
@@ -202,7 +229,7 @@ textarea {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 410px);
   align-items: center;
-  gap: clamp(36px, 6vw, 76px);
+  gap: var(--hero-gap);
 }
 
 .eyebrow,
@@ -219,7 +246,7 @@ textarea {
 .hero h1 {
   max-width: 720px;
   margin: 0;
-  font-size: clamp(3.1rem, 6.4vw, 6.15rem);
+  font-size: clamp(3.1rem, 6.4vw, var(--hero-title-max-size));
   line-height: 0.92;
 }
 
@@ -294,8 +321,8 @@ textarea {
 .portrait-stage {
   position: relative;
   display: grid;
-  width: min(360px, 100%);
-  min-height: 410px;
+  width: min(var(--hero-photo-width), 100%);
+  min-height: var(--hero-photo-min-height);
   align-items: end;
   justify-items: center;
 }
@@ -303,22 +330,23 @@ textarea {
 .portrait-stage::before {
   content: "";
   position: absolute;
-  right: 5%;
-  bottom: 8%;
-  width: 82%;
+  right: var(--hero-photo-bg-right);
+  bottom: var(--hero-photo-bg-bottom);
+  width: var(--hero-photo-bg-width);
   aspect-ratio: 1;
   border: 3px solid var(--ink);
   background:
-    linear-gradient(135deg, var(--yellow) 0 50%, transparent 50% 100%),
-    var(--teal);
-  box-shadow: 18px 18px 0 var(--coral);
+    linear-gradient(135deg, var(--hero-photo-bg-color-1) 0 50%, transparent 50% 100%),
+    var(--hero-photo-bg-color-2);
+  box-shadow: var(--hero-photo-bg-shadow);
 }
 
 .portrait-stage img {
   position: relative;
   z-index: 1;
-  max-height: 455px;
+  max-height: var(--hero-photo-max-height);
   object-fit: contain;
+  transform: translateY(var(--hero-photo-y)) scale(var(--hero-photo-scale));
 }
 
 .hero-note {
@@ -376,7 +404,7 @@ textarea {
 }
 
 .section {
-  padding: 92px 0;
+  padding: var(--section-padding) 0;
 }
 
 #profile,
@@ -813,7 +841,7 @@ textarea {
 
   .hero {
     min-height: auto;
-    padding-top: 48px;
+    padding-top: var(--hero-mobile-padding-top);
   }
 
   .hero-grid,
@@ -833,7 +861,7 @@ textarea {
   }
 
   .portrait-stage {
-    min-height: 400px;
+    min-height: var(--hero-photo-tablet-min-height);
   }
 
   .proof-grid {
@@ -874,7 +902,7 @@ textarea {
   }
 
   .hero h1 {
-    font-size: clamp(2.85rem, 14vw, 4.5rem);
+    font-size: clamp(2.85rem, 14vw, var(--hero-title-mobile-max-size));
   }
 
   .hero-actions,
@@ -883,11 +911,11 @@ textarea {
   }
 
   .portrait-stage {
-    min-height: 340px;
+    min-height: var(--hero-photo-mobile-min-height);
   }
 
   .portrait-stage img {
-    max-height: 380px;
+    max-height: var(--hero-photo-mobile-max-height);
   }
 
   .hero-note {

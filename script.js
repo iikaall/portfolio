@@ -284,12 +284,71 @@ const createTagRow = (tags) => {
   return row;
 };
 
+const styleSettingMap = {
+  style_background: { variable: "--paper" },
+  style_background_alt: { variable: "--paper-strong" },
+  style_text: { variable: "--ink" },
+  style_muted_text: { variable: "--muted" },
+  style_line: { variable: "--line" },
+  style_primary: { variable: "--teal" },
+  style_primary_dark: { variable: "--teal-dark" },
+  style_accent: { variable: "--yellow" },
+  style_coral: { variable: "--coral" },
+  style_blue: { variable: "--blue" },
+  style_card_radius: { variable: "--radius", unit: "px" },
+  style_section_padding: { variable: "--section-padding", unit: "px" },
+  style_hero_grid_line_x: { variable: "--hero-grid-line-x" },
+  style_hero_grid_line_y: { variable: "--hero-grid-line-y" },
+  style_hero_padding_top: { variable: "--hero-padding-top", unit: "px" },
+  style_hero_padding_bottom: { variable: "--hero-padding-bottom", unit: "px" },
+  style_hero_gap: { variable: "--hero-gap", unit: "px" },
+  style_hero_title_max_size: { variable: "--hero-title-max-size", unit: "rem" },
+  style_hero_title_mobile_max_size: { variable: "--hero-title-mobile-max-size", unit: "rem" },
+  style_hero_dark_height: { variable: "--hero-dark-height", unit: "%" },
+  style_hero_dark_slope: { variable: "--hero-dark-slope", unit: "%" },
+  style_hero_mobile_padding_top: { variable: "--hero-mobile-padding-top", unit: "px" },
+  style_hero_photo_width: { variable: "--hero-photo-width", unit: "px" },
+  style_hero_photo_min_height: { variable: "--hero-photo-min-height", unit: "px" },
+  style_hero_photo_max_height: { variable: "--hero-photo-max-height", unit: "px" },
+  style_hero_photo_tablet_min_height: { variable: "--hero-photo-tablet-min-height", unit: "px" },
+  style_hero_photo_mobile_min_height: { variable: "--hero-photo-mobile-min-height", unit: "px" },
+  style_hero_photo_mobile_max_height: { variable: "--hero-photo-mobile-max-height", unit: "px" },
+  style_hero_photo_y: { variable: "--hero-photo-y", unit: "px" },
+  style_hero_photo_scale: { variable: "--hero-photo-scale" },
+  style_hero_photo_bg_width: { variable: "--hero-photo-bg-width", unit: "%" },
+  style_hero_photo_bg_right: { variable: "--hero-photo-bg-right", unit: "%" },
+  style_hero_photo_bg_bottom: { variable: "--hero-photo-bg-bottom", unit: "%" },
+  style_hero_photo_bg_color_1: { variable: "--hero-photo-bg-color-1" },
+  style_hero_photo_bg_color_2: { variable: "--hero-photo-bg-color-2" },
+  style_hero_photo_bg_shadow: { variable: "--hero-photo-bg-shadow" },
+  style_brand_photo_y: { variable: "--brand-photo-y", unit: "%" },
+  style_brand_photo_scale: { variable: "--brand-photo-scale" }
+};
+
+const normalizeStyleValue = (value, unit) => {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) return "";
+  if (unit && /^-?\d+(\.\d+)?$/.test(trimmed)) return `${trimmed}${unit}`;
+  return trimmed;
+};
+
+const applyStyleSettings = (settings) => {
+  const root = document.documentElement;
+
+  Object.entries(styleSettingMap).forEach(([key, config]) => {
+    const value = normalizeStyleValue(settings[key], config.unit);
+    if (value) root.style.setProperty(config.variable, value);
+  });
+};
+
 const setFields = (settings) => {
   Object.entries(settings).forEach(([key, value]) => {
     document.querySelectorAll(`[data-field="${key}"]`).forEach((node) => {
       node.textContent = value;
     });
   });
+
+  applyStyleSettings(settings);
 
   const email = settings.email || "";
   const whatsapp = settings.whatsapp || settings.phone || "";

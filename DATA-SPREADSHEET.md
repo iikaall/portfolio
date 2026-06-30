@@ -22,6 +22,8 @@ Website ini membaca satu CSV publik dari Google Sheets. Semua baris data memakai
 - `featured` - isi `TRUE` untuk membuat project tampil sebagai kartu utama.
 - `size` - ukuran galeri, bisa `tall`, `wide`, atau dikosongkan.
 
+Untuk custom tampilan, gunakan `section = setting`, lalu isi `key` dengan nama yang diawali `style_`. Daftar style yang aman dipakai ada di `CUSTOMIZE.md`.
+
 ## Contoh Section
 
 ### Histori Pekerjaan
