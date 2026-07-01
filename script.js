@@ -231,6 +231,7 @@ const normalizeSection = (value) => {
     histori_pendidikan: "education",
     project: "project",
     projek: "project",
+    projectmedia: "projectMedia",
     portfolio_project: "project",
     portfolio_projek: "project",
     portofolio_project: "project",
@@ -325,6 +326,21 @@ const getVideoEmbedUrl = (url) => getYouTubeEmbedUrl(url) || getVimeoEmbedUrl(ur
 
 const isVideoFile = (url) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(String(url || ""));
 
+const normalizeSizeClasses = (value, fallback = "fit-contain") => {
+  const allowed = new Set(["wide", "tall", "cover", "contain", "top", "center", "fit-cover", "fit-contain"]);
+  const classes = splitList(String(value || "").replace(/[,\s]+/g, "|"))
+    .map((token) => token.toLowerCase())
+    .map((token) => {
+      if (token === "cover") return "fit-cover";
+      if (token === "contain") return "fit-contain";
+      return token;
+    })
+    .filter((token) => allowed.has(token));
+
+  if (!classes.some((token) => token.startsWith("fit-"))) classes.push(fallback);
+  return [...new Set(classes)].join(" ");
+};
+
 const setExternalLink = (link, url) => {
   link.href = url;
   if (/^https?:/i.test(url)) {
@@ -333,9 +349,64 @@ const setExternalLink = (link, url) => {
   }
 };
 
+let lightbox;
+
+const getLightbox = () => {
+  if (lightbox) return lightbox;
+
+  lightbox = createEl("div", "lightbox");
+  lightbox.hidden = true;
+  lightbox.innerHTML = `
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Pratinjau gambar">
+      <button class="lightbox-close" type="button" aria-label="Tutup gambar">x</button>
+      <img alt="">
+      <p></p>
+    </div>
+  `;
+
+  const close = () => {
+    lightbox.hidden = true;
+    document.body.classList.remove("lightbox-open");
+  };
+
+  lightbox.querySelector(".lightbox-close").addEventListener("click", close);
+  lightbox.addEventListener("click", (event) => {
+    if (event.target === lightbox) close();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !lightbox.hidden) close();
+  });
+  document.body.append(lightbox);
+  return lightbox;
+};
+
+const openLightbox = (src, alt = "") => {
+  const preview = getLightbox();
+  const image = preview.querySelector("img");
+  const caption = preview.querySelector("p");
+  image.src = src;
+  image.alt = alt;
+  caption.textContent = alt;
+  caption.hidden = !alt;
+  preview.hidden = false;
+  document.body.classList.add("lightbox-open");
+};
+
+const createImageButton = (src, alt = "") => {
+  const button = createEl("button", "image-open");
+  button.type = "button";
+  button.setAttribute("aria-label", alt ? `Lihat gambar: ${alt}` : "Lihat gambar");
+  const image = createEl("img");
+  image.src = src;
+  image.alt = alt;
+  button.append(image);
+  button.addEventListener("click", () => openLightbox(src, alt));
+  return button;
+};
+
 const createMediaFigure = (item, className = "media-item") => {
   const mediaType = normalizeMediaType(item.type || item.subtitle || item.key, item.linkUrl || item.image);
-  const figure = createEl("figure", `${className} ${item.size || ""}`.trim());
+  const figure = createEl("figure", `${className} ${normalizeSizeClasses(item.size)}`.trim());
   const frame = createEl("div", `media-frame ${mediaType === "video" ? "video-frame" : ""}`.trim());
   const title = item.title || item.alt || "Media";
 
@@ -373,10 +444,7 @@ const createMediaFigure = (item, className = "media-item") => {
       frame.append(createEl("div", "project-placeholder", title));
     }
   } else if (item.image) {
-    const image = createEl("img");
-    image.src = item.image;
-    image.alt = item.alt || title;
-    frame.append(image);
+    frame.append(createImageButton(item.image, item.alt || title));
   } else {
     frame.append(createEl("div", "project-placeholder", title));
   }
@@ -401,6 +469,7 @@ const styleSettingMap = {
   style_section_padding: { variable: "--section-padding", unit: "px" },
   style_hero_grid_line_x: { variable: "--hero-grid-line-x" },
   style_hero_grid_line_y: { variable: "--hero-grid-line-y" },
+  style_hero_min_height: { variable: "--hero-min-height", unit: "px" },
   style_hero_padding_top: { variable: "--hero-padding-top", unit: "px" },
   style_hero_padding_bottom: { variable: "--hero-padding-bottom", unit: "px" },
   style_hero_gap: { variable: "--hero-gap", unit: "px" },
@@ -424,7 +493,10 @@ const styleSettingMap = {
   style_hero_photo_bg_color_2: { variable: "--hero-photo-bg-color-2" },
   style_hero_photo_bg_shadow: { variable: "--hero-photo-bg-shadow" },
   style_brand_photo_y: { variable: "--brand-photo-y", unit: "%" },
-  style_brand_photo_scale: { variable: "--brand-photo-scale" }
+  style_brand_photo_scale: { variable: "--brand-photo-scale" },
+  style_proof_padding: { variable: "--proof-padding", unit: "px" },
+  style_project_cover_height: { variable: "--project-cover-height", unit: "px" },
+  style_gallery_tile_height: { variable: "--gallery-tile-height", unit: "px" }
 };
 
 const normalizeStyleValue = (value, unit) => {
@@ -495,15 +567,15 @@ const renderProjects = (projects) => {
       const mediaItems = project.media || [];
       const bullets = project.bullets || [];
       const tags = project.tags || [];
-      const article = createEl("article", project.featured ? "project-card featured" : "project-card");
+      const article = createEl(
+        "article",
+        `${project.featured ? "project-card featured" : "project-card"} ${normalizeSizeClasses(project.coverFit)}`
+      );
       const media = createEl("div", "project-media");
       const primaryMedia = project.image ? project : mediaItems.find((item) => item.image);
 
       if (primaryMedia?.image) {
-        const image = createEl("img");
-        image.src = primaryMedia.image;
-        image.alt = primaryMedia.alt || project.alt || project.title || "Gambar proyek";
-        media.append(image);
+        media.append(createImageButton(primaryMedia.image, primaryMedia.alt || project.alt || project.title || "Gambar proyek"));
       } else {
         media.append(createEl("div", "project-placeholder", project.title || "Project"));
       }
@@ -584,12 +656,44 @@ const renderTimeline = (selector, items) => {
 const renderProjectHistory = (items) => {
   clearAndAppend(
     '[data-render="projectHistory"]',
-    items.map((item) => {
+    items.map((item, index) => {
       const article = createEl("article", "history-item");
-      if (item.period) article.append(createEl("span", "timeline-date", item.period));
-      article.append(createEl("h3", "", item.title));
-      if (item.subtitle) article.append(createEl("p", "muted", item.subtitle));
-      if (item.description) article.append(createEl("p", "", item.description));
+      const summary = createEl("button", "history-toggle");
+      const text = createEl("span", "history-summary");
+      summary.type = "button";
+      summary.setAttribute("aria-expanded", "false");
+      summary.setAttribute("aria-controls", `history-detail-${index + 1}`);
+      if (item.period) text.append(createEl("span", "timeline-date", item.period));
+      text.append(createEl("strong", "", item.title));
+      summary.append(text, createEl("span", "history-icon", "+"));
+      article.append(summary);
+
+      const detail = createEl("div", "history-detail");
+      detail.id = `history-detail-${index + 1}`;
+      detail.hidden = true;
+      if (item.subtitle) detail.append(createEl("p", "muted", item.subtitle));
+      if (item.description) detail.append(createEl("p", "", item.description));
+      if (item.bullets?.length) {
+        const list = createEl("ul", "check-list");
+        item.bullets.forEach((bullet) => list.append(createEl("li", "", bullet)));
+        detail.append(list);
+      }
+      if (item.tags?.length) detail.append(createTagRow(item.tags));
+      if (item.image) detail.append(createMediaFigure(item, "history-media"));
+      if (item.linkUrl) {
+        const link = createEl("a", "button ghost project-link", item.linkLabel || "Lihat detail");
+        setExternalLink(link, item.linkUrl);
+        detail.append(link);
+      }
+
+      summary.addEventListener("click", () => {
+        const isExpanded = article.classList.toggle("expanded");
+        detail.hidden = !isExpanded;
+        summary.setAttribute("aria-expanded", String(isExpanded));
+        summary.querySelector(".history-icon").textContent = isExpanded ? "-" : "+";
+      });
+
+      article.append(detail);
       return article;
     })
   );
@@ -810,7 +914,8 @@ const rowsToPortfolio = (rows) => {
         image: row.image,
         alt: row.alt,
         linkLabel: row.link_label,
-        linkUrl: row.link_url
+        linkUrl: row.link_url,
+        coverFit: row.size
       });
     }
 
@@ -835,7 +940,13 @@ const rowsToPortfolio = (rows) => {
         period: row.period,
         title,
         subtitle: row.subtitle,
-        description
+        description,
+        bullets: splitList(row.bullets),
+        tags: splitList(row.tags),
+        image: row.image,
+        alt: row.alt,
+        linkLabel: row.link_label,
+        linkUrl: row.link_url
       });
     }
 

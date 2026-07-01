@@ -15,9 +15,10 @@
   --section-padding: 92px;
   --hero-grid-line-x: rgba(15, 139, 141, 0.12);
   --hero-grid-line-y: rgba(15, 139, 141, 0.1);
+  --hero-min-height: 720px;
   --hero-padding-top: 64px;
   --hero-padding-bottom: 54px;
-  --hero-dark-height: 42%;
+  --hero-dark-height: 34%;
   --hero-dark-slope: 28%;
   --hero-gap: clamp(36px, 6vw, 76px);
   --hero-title-max-size: 6.15rem;
@@ -39,6 +40,9 @@
   --brand-photo-scale: 1.35;
   --hero-mobile-padding-top: 48px;
   --hero-title-mobile-max-size: 4.5rem;
+  --proof-padding: 24px;
+  --project-cover-height: 320px;
+  --gallery-tile-height: 180px;
   color-scheme: light;
 }
 
@@ -205,7 +209,7 @@ textarea {
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: calc(100vh - 74px);
+  min-height: var(--hero-min-height);
   padding: var(--hero-padding-top) 0 var(--hero-padding-bottom);
   background:
     linear-gradient(90deg, var(--hero-grid-line-x) 0 1px, transparent 1px 100%),
@@ -375,18 +379,20 @@ textarea {
 .proof-band {
   background: var(--ink);
   color: var(--white);
-  padding: 26px 0;
+  padding: var(--proof-padding) 0;
 }
 
 .proof-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 240px));
   gap: 18px;
+  justify-content: center;
+  text-align: center;
 }
 
 .proof-grid div {
-  border-left: 3px solid var(--yellow);
-  padding-left: 16px;
+  border-top: 3px solid var(--yellow);
+  padding: 14px 10px 0;
 }
 
 .proof-grid strong {
@@ -475,15 +481,31 @@ textarea {
 }
 
 .project-media {
-  min-height: 320px;
+  display: grid;
+  min-height: var(--project-cover-height);
   background: var(--paper-strong);
 }
 
+.project-media .image-open,
 .project-media img {
   width: 100%;
   height: 100%;
-  min-height: 320px;
+  min-height: var(--project-cover-height);
+}
+
+.project-media img {
+  object-fit: contain;
+  padding: 12px;
+}
+
+.fit-cover .project-media img {
   object-fit: cover;
+  padding: 0;
+}
+
+.fit-top .project-media img,
+.top .project-media img {
+  object-position: center top;
 }
 
 .project-content {
@@ -559,7 +581,6 @@ textarea {
 }
 
 .project-gallery-item {
-  overflow: hidden;
   margin: 0;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -587,7 +608,26 @@ textarea {
   width: 100%;
   height: 100%;
   border: 0;
+  object-fit: contain;
+}
+
+.image-open {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  padding: 0;
+}
+
+.fit-cover .media-frame img {
   object-fit: cover;
+}
+
+.fit-contain .media-frame img {
+  object-fit: contain;
+  padding: 10px;
 }
 
 .media-link {
@@ -741,11 +781,15 @@ textarea {
   padding-top: 34px;
 }
 
-.history-list,
 .cert-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+}
+
+.history-list {
+  display: grid;
+  gap: 10px;
 }
 
 .history-item,
@@ -754,6 +798,59 @@ textarea {
   border-radius: var(--radius);
   background: var(--white);
   padding: 24px;
+}
+
+.history-item {
+  padding: 0;
+}
+
+.history-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 18px 20px;
+  text-align: left;
+}
+
+.history-summary {
+  display: grid;
+  gap: 2px;
+}
+
+.history-summary strong {
+  font-size: 1.05rem;
+}
+
+.history-icon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  font-weight: 900;
+}
+
+.history-detail {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding: 0 20px 20px;
+}
+
+.history-detail[hidden] {
+  display: none;
+}
+
+.history-media {
+  margin: 0;
 }
 
 .certifications-section {
@@ -800,17 +897,16 @@ textarea {
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-rows: 180px;
+  grid-auto-rows: var(--gallery-tile-height);
   gap: 16px;
 }
 
 .gallery-item {
   position: relative;
-  overflow: hidden;
   margin: 0;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--ink);
+  background: var(--paper-strong);
 }
 
 .gallery-item.tall {
@@ -824,8 +920,14 @@ textarea {
 .gallery-item img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 10px;
   transition: transform 300ms ease;
+}
+
+.gallery-item.fit-cover img {
+  object-fit: cover;
+  padding: 0;
 }
 
 .gallery-item .media-frame {
@@ -838,7 +940,7 @@ textarea {
 }
 
 .gallery-item:hover img {
-  transform: scale(1.04);
+  transform: scale(1.02);
 }
 
 .gallery-item figcaption {
@@ -852,6 +954,62 @@ textarea {
   font-size: 0.9rem;
   font-weight: 800;
   padding: 8px 10px;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgba(23, 33, 38, 0.86);
+  padding: 24px;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox-open {
+  overflow: hidden;
+}
+
+.lightbox-panel {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  width: min(960px, 100%);
+  max-height: calc(100vh - 48px);
+  border-radius: var(--radius);
+  background: var(--white);
+  padding: 14px;
+}
+
+.lightbox-panel img {
+  width: 100%;
+  max-height: calc(100vh - 150px);
+  object-fit: contain;
+}
+
+.lightbox-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--white);
+  cursor: pointer;
+  font-weight: 900;
 }
 
 .contact-section {
@@ -971,7 +1129,7 @@ textarea {
   }
 
   .proof-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 240px));
   }
 
   .project-card,
@@ -1055,6 +1213,7 @@ textarea {
   }
 
   .project-media,
+  .project-media .image-open,
   .project-media img {
     min-height: 260px;
   }
