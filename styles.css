@@ -949,7 +949,7 @@ textarea {
   right: 12px;
   bottom: 12px;
   border-radius: var(--radius);
-  background: rgba(23, 33, 38, 0.32);
+  background: rgba(23, 33, 38, 0.25);
   color: var(--white);
   font-size: 0.9rem;
   font-weight: 800;
