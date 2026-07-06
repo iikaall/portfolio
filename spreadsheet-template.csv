@@ -23,44 +23,6 @@ setting,21,TRUE,email,,,,haikal.f103@gmail.com,,,,,,,,,
 setting,22,TRUE,phone,,,,0822-9788-9923,,,,,,,,,
 setting,23,TRUE,whatsapp,,,,6282297889923,,,,,,,,,
 setting,24,TRUE,footer_text,,,,Copyright 2026 Muhammad Haikal Fanzury,,,,,,,,,
-setting,25,TRUE,style_background,,,,#fbfaf6,,,,,,,,,
-setting,26,TRUE,style_background_alt,,,,#f2efe7,,,,,,,,,
-setting,27,TRUE,style_text,,,,#172126,,,,,,,,,
-setting,28,TRUE,style_primary,,,,#0f8b8d,,,,,,,,,
-setting,29,TRUE,style_primary_dark,,,,#0a5e61,,,,,,,,,
-setting,30,TRUE,style_accent,,,,#f5b942,,,,,,,,,
-setting,31,TRUE,style_coral,,,,#e85d5d,,,,,,,,,
-setting,32,TRUE,style_blue,,,,#315c9b,,,,,,,,,
-setting,33,TRUE,style_section_padding,,,,92px,,,,,,,,,
-setting,34,TRUE,style_card_radius,,,,8px,,,,,,,,,
-setting,35,TRUE,style_hero_min_height,,,,720px,,,,,,,,,
-setting,35,TRUE,style_hero_padding_top,,,,64px,,,,,,,,,
-setting,36,TRUE,style_hero_padding_bottom,,,,54px,,,,,,,,,
-setting,37,TRUE,style_hero_gap,,,,76px,,,,,,,,,
-setting,38,TRUE,style_hero_title_max_size,,,,6.15rem,,,,,,,,,
-setting,39,TRUE,style_hero_title_mobile_max_size,,,,4.5rem,,,,,,,,,
-setting,40,TRUE,style_hero_dark_height,,,,23%,,,,,,,,,
-setting,41,TRUE,style_hero_dark_slope,,,,26%,,,,,,,,,
-setting,42,TRUE,style_hero_mobile_padding_top,,,,48px,,,,,,,,,
-setting,43,TRUE,style_hero_photo_width,,,,360px,,,,,,,,,
-setting,44,TRUE,style_hero_photo_min_height,,,,410px,,,,,,,,,
-setting,45,TRUE,style_hero_photo_max_height,,,,455px,,,,,,,,,
-setting,46,TRUE,style_hero_photo_tablet_min_height,,,,400px,,,,,,,,,
-setting,47,TRUE,style_hero_photo_mobile_min_height,,,,340px,,,,,,,,,
-setting,48,TRUE,style_hero_photo_mobile_max_height,,,,380px,,,,,,,,,
-setting,49,TRUE,style_hero_photo_y,,,,0px,,,,,,,,,
-setting,50,TRUE,style_hero_photo_scale,,,,1,,,,,,,,,
-setting,51,TRUE,style_hero_photo_bg_width,,,,82%,,,,,,,,,
-setting,52,TRUE,style_hero_photo_bg_right,,,,5%,,,,,,,,,
-setting,53,TRUE,style_hero_photo_bg_bottom,,,,6%,,,,,,,,,
-setting,54,TRUE,style_hero_photo_bg_color_1,,,,#f5b942,,,,,,,,,
-setting,55,TRUE,style_hero_photo_bg_color_2,,,,#0f8b8d,,,,,,,,,
-setting,56,TRUE,style_hero_photo_bg_shadow,,,,18px 25px 0 #e85d5d,,,,,,,,,
-setting,57,TRUE,style_brand_photo_y,,,,18%,,,,,,,,,
-setting,58,TRUE,style_brand_photo_scale,,,,1.35,,,,,,,,,
-setting,59,TRUE,style_proof_padding,,,,24px,,,,,,,,,
-setting,60,TRUE,style_project_cover_height,,,,320px,,,,,,,,,
-setting,61,TRUE,style_gallery_tile_height,,,,180px,,,,,,,,,
 stat,1,TRUE,,,,,30+,Projek internal perusahaan,,,,,,,,
 stat,2,TRUE,,,,,15+,Projek pribadi,,,,,,,,
 stat,3,TRUE,,,,,25+,Alur sistem kerja ribet disederhanakan,,,,,,,,
@@ -70,12 +32,11 @@ education,1,TRUE,,UIN Syarif Hidayatullah,"Bachelor Degree, Ciputat",2016 - 2021
 education,2,TRUE,,Darunnajah Islamic Boarding School,"Ulujami, Jakarta",2010 - 2016,,"Pengurus Jam'iyyah Qurro, bagian pengajaran OSDN, dan pengurus asrama Santri Baru.",,,,,,,,
 project,1,TRUE,sistem-absensi,Sistem Absensi Guru,HRD Alif Iqra,,,Mengubah format absensi lama menjadi sistem input dan tracking yang lebih jelas menggunakan Google Sheets dan Google Apps Script.,Form input master data guru dan murid.|Status absensi lebih mudah dipantau dan divalidasi.|Struktur data disiapkan untuk visualisasi dashboard.,Google Sheets|Apps Script|Data Entry,assets/attendance-system.jpeg,Tampilan sistem absensi guru berbasis Google Sheets,,,TRUE,contain
 project,2,TRUE,dashboard-reporting,Dashboard Reporting Otomatis,Monthly Report,,,Membuat dashboard laporan bulanan agar data absensi dan pengajuan fee guru dapat dibaca lebih cepat tanpa perhitungan manual setiap bulan.,,Looker Studio|Spreadsheet|Analytics,assets/monthly-dashboard.jpg,Dashboard laporan absensi dan pengajuan fee guru,,,TRUE,contain
-project,3,TRUE,student-learning-progress,Student Learning Progress,Akademik Alif Iqra,,,Membantu pembuatan sistem laporan perkembangan murid yang bisa diisi lebih praktis oleh guru dan dikonversi menjadi PDF setelah proses validasi.,,Reporting|PDF Flow|Academic Ops,assets/student-report.jpeg,Contoh Student Learning Progress Alif Iqra,,,TRUE,cover
-project_media,1,FALSE,sistem-absensi,Video demo sistem,video,,,Video singkat tentang cara kerja sistem absensi.,,,assets/attendance-system.jpeg,Thumbnail video sistem absensi,Lihat video,https://www.youtube.com/watch?v=VIDEO_ID,,wide
-project_media,2,FALSE,sistem-absensi,Tampilan detail,image,,,Gambar tambahan yang akan muncul saat proyek dibuka.,,,assets/monthly-dashboard.jpg,Gambar tambahan proyek,,,,
-project_history,1,TRUE,,Dashboard Absensi dan Fee Guru,HRD Alif Iqra,2023,,Membuat laporan otomatis dari data operasional agar rekap bulanan lebih cepat.,,,,,,,,
-project_history,2,TRUE,,Sistem Student Report,Akademik Alif Iqra,2024,,"Menyusun alur input, validasi, dan output PDF untuk laporan perkembangan murid.",,,,,,,,
-project_history,3,TRUE,,WebApp Pengajuan & Laporan Dana Perusahaan,Finance Alif Iqra,2026,,Membuat webapp sederhana dengan Google Apps Script untuk pembuatan pengajuan dana anggaran/reimburse serta laporan dana dan dashboard sesuai kebutuhan divisi Finance Alif Iqra,,,,,,,,
+project,3,TRUE,student-learning-progress,Student Learning Progress,Akademik Alif Iqra,,,Membantu pembuatan sistem laporan perkembangan murid yang bisa diisi lebih praktis oleh guru dan dikonversi menjadi PDF setelah proses validasi.,,Reporting|PDF Flow|Academic Ops,assets/student-report.jpeg,Contoh Student Learning Progress Alif Iqra,,,TRUE,contain
+project_media,1,TRUE,sistem-absensi,Video demo sistem,video,,,Video singkat tentang cara kerja sistem absensi.,,,assets/attendance-system.jpeg,Thumbnail video sistem absensi,Lihat video,https://www.youtube.com/watch?v=VIDEO_ID,,wide
+project_media,2,TRUE,sistem-absensi,Tampilan detail,image,,,Gambar tambahan yang akan muncul saat proyek dibuka.,,,assets/monthly-dashboard.jpg,Gambar tambahan proyek,,,,
+project_history,1,TRUE,,Sistem Student Report,Akademik Alif Iqra,2024,,"Menyusun alur input, validasi, dan output PDF untuk laporan perkembangan murid.",,,,,,,,
+project_history,2,TRUE,,Dashboard Absensi dan Fee Guru,HRD Alif Iqra,2023,,Membuat laporan otomatis dari data operasional agar rekap bulanan lebih cepat.,,,,,,,,
 skill,1,TRUE,professional,,,,Database,,,,,,,,,
 skill,2,TRUE,professional,,,,Data Entry,,,,,,,,,
 skill,3,TRUE,professional,,,,Data Analytics,,,,,,,,,
@@ -108,9 +69,9 @@ certification,2,TRUE,,English Certificate,EF Set Test,2024,,"The achieved Englis
 Common European Framework of Reference (CEFR). The EF SET score is calculated as an average of the reading, listening, writing, and speaking scores.",,Certificate,,,Lihat sertifikat,https://drive.google.com/file/d/1y0qOL6uwlXkVS6Jqj3eIBeWPMlwEsAfj/view?usp=drive_link,,
 gallery,1,TRUE,video,Podcast Cerita Guru Eps. 6 Part 1,video,,,Podcast Cerita Guru bareng Muzakka Alzama Rizki,,,,Thumbnail video profil,Lihat video,https://www.youtube.com/watch?v=8SR7krPRRmw,,wide contain
 gallery,2,TRUE,video,Podcast Cerita Guru Eps. 21,video,,,Podcast Cerita Guru bareng Ahmad Fairuz Zabadi,,,,Thumbnail video profil,Lihat video,https://www.youtube.com/watch?v=7ehsXRy7mew,,wide contain
-gallery,2,TRUE,tall,Logo Majlis Ratib Perumahan,image,,,,,,assets/design-logo.png,Logo Majlis Ratib Al-Haddad karya desain,,,,contain
-gallery,3,TRUE,,"Talent DNK TV Program ""Jendela Islam""",image,,,,,,assets/talent-qori.jpg,Muhammad Haikal Fanzury tampil dalam program Jendela Islam,,,,contain
-gallery,4,TRUE,wide,Dashboard operasional HR Alif Iqra,image,,,,,,assets/monthly-dashboard.jpg,Dashboard laporan absensi Alif Iqra,,,,contain
+gallery,2,TRUE,tall,Logo Majlis Ratib Perumahan,,,,,,,assets/design-logo.png,Logo Majlis Ratib Al-Haddad karya desain,,,,contain
+gallery,3,TRUE,,"Talent DNK TV Program ""Jendela Islam""",,,,,,,assets/talent-qori.jpg,Muhammad Haikal Fanzury tampil dalam program Jendela Islam,,,,contain
+gallery,4,TRUE,wide,Dashboard operasional HR Alif Iqra,,,,,,,assets/monthly-dashboard.jpg,Dashboard laporan absensi Alif Iqra,,,,contain
 contact,1,TRUE,email,Email,,,haikal.f103@gmail.com,,,,,,,mailto:haikal.f103@gmail.com,,
 contact,2,TRUE,phone,Telepon,,,0822-9788-9923,,,,,,,tel:+6282297889923,,
 contact,3,TRUE,whatsapp,WhatsApp,,,Kirim pesan langsung,,,,,,,https://wa.me/6282297889923,,

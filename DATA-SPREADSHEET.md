@@ -20,9 +20,11 @@ Website ini membaca satu CSV publik dari Google Sheets. Semua baris data memakai
 - `link_label` - teks tombol link.
 - `link_url` - URL tujuan.
 - `featured` - isi `TRUE` untuk membuat project tampil sebagai kartu utama.
-- `size` - ukuran galeri, bisa `tall`, `wide`, atau dikosongkan.
+- `size` - format media. Bisa `contain`, `cover`, `wide contain`, `tall contain`, atau `wide cover`.
 
-Untuk custom tampilan, gunakan `section = setting`, lalu isi `key` dengan nama yang diawali `style_`. Daftar style yang aman dipakai ada di `CUSTOMIZE.md`.
+Spreadsheet ini dipakai untuk konten saja. Pengaturan tampilan/CSS tidak lagi dijalankan dari spreadsheet.
+
+Jika ingin mengubah desain, gunakan file `styles.css` dan panduan `STYLE-GUIDE.md` atau `style-guide.csv`.
 
 ## Contoh Section
 
@@ -48,9 +50,15 @@ bullets: Form input laporan|Validasi data|Export PDF|Dashboard monitoring
 tags: Google Apps Script|Google Sheets|HTML/CSS|PDF Automation
 image: assets/student-report.jpeg
 featured: TRUE
+size: contain
 ```
 
 Kartu proyek akan tampil ringkas lebih dulu. Saat diklik, kartu akan membuka detail lengkap seperti `description`, `bullets`, `tags`, tombol `link_url`, dan media terkait.
+
+Untuk cover proyek:
+
+- `size: contain` membuat gambar tampil utuh dan tidak terpotong.
+- `size: cover` membuat gambar memenuhi area cover, tetapi sebagian bisa terpotong.
 
 ### Galeri atau Video Terkait Proyek
 
@@ -59,6 +67,7 @@ Gunakan `section: project_media`. Isi `key` dengan kode yang sama seperti proyek
 ```text
 section: project_media
 key: sistem-input-laporan
+visible: TRUE
 title: Video demo laporan
 subtitle: video
 description: Video singkat cara kerja sistem.
@@ -70,6 +79,8 @@ size: wide
 ```
 
 Untuk gambar terkait proyek, isi `subtitle: image`, lalu isi kolom `image`.
+
+Catatan penting: `key` pada `project_media` harus sama dengan `key` proyek induknya. Media proyek muncul di dalam kartu proyek setelah tombol `Lihat detail` diklik.
 
 ### Skill
 
@@ -126,6 +137,13 @@ link_url: https://www.youtube.com/watch?v=VIDEO_ID
 size: wide
 ```
 
+Untuk galeri:
+
+- `size: contain` cocok untuk screenshot, dashboard, dokumen, atau gambar yang tidak boleh terpotong.
+- `size: cover` cocok untuk foto aktivitas yang aman dicrop.
+- `wide contain` membuat kotak lebih lebar dan gambar tetap utuh.
+- `tall contain` membuat kotak lebih tinggi dan gambar tetap utuh.
+
 ## Kapan Perlu Upload Ulang ke GitHub
 
 Tidak perlu upload ulang jika hanya mengubah teks, project, skill, pekerjaan, pendidikan, atau sertifikasi di Google Sheets.
@@ -144,6 +162,7 @@ Bagian dinamisnya ada di tiga tempat:
 - `site-config.js` menyimpan URL CSV Google Sheets.
 - `script.js` mengambil data dari URL CSV tersebut, membaca kolom `section`, lalu mengganti isi HTML.
 - elemen di `index.html` yang punya atribut `data-render` dan `data-field` menjadi tempat data spreadsheet ditampilkan.
+- `styles.css` mengatur tampilan. Baris `style_...` di spreadsheet tidak lagi dipakai untuk mengubah CSS.
 
 Contoh:
 

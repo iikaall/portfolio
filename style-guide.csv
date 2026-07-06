@@ -1,0 +1,12 @@
+bagian,untuk_mengubah,file,selector_utama,catatan_prompt_ai
+Hero utama,Tampilan first screen background grid bidang gelap foto dan tombol,styles.css,".hero, .hero-grid, .hero h1, .hero-note, .portrait-stage","Upgrade hero agar lebih premium interaktif dan tetap responsive. Pertahankan struktur HTML yang ada."
+Statistik,Angka 30+ 15+ 25+ dan animasi counter,styles.css dan script.js,".proof-band, .proof-grid, .stat-value, renderStats(), prepareCounters()","Buat statistik lebih seperti landing page modern dengan counter animated dan layout center."
+Section umum,Jarak antar section heading dan animasi saat scroll,styles.css,".section, .section-heading, .reveal-on-scroll","Rapikan spacing section dan animasi reveal saat elemen masuk viewport."
+Project card,Kartu proyek cover tombol lihat detail dan expand collapse,styles.css dan script.js,".project-card, .project-media, .project-content, .project-extra, renderProjects()","Buat project card lebih interaktif, cover rapi, detail expand collapse tetap berjalan."
+Project media,Gambar/video tambahan yang muncul dalam detail project,styles.css dan script.js,".project-gallery, .project-gallery-item, createMediaFigure()","Rapikan gallery/video di dalam project detail, jangan ubah format spreadsheet."
+Histori project,List ringkas tahun + judul lalu detail saat diklik,styles.css dan script.js,".history-list, .history-item, .history-toggle, renderProjectHistory()","Buat histori project seperti timeline/list interaktif yang compact."
+Resume,Pengalaman pendidikan skill dalam kartu responsive,styles.css,".experience-section, .timeline, .timeline-item, .skill-layout, .skill-box","Upgrade resume agar lebih modern dan mudah discan."
+Sertifikasi,Kartu sertifikasi,styles.css,".cert-grid, .cert-card","Rapikan kartu sertifikasi agar seragam dengan project/resume."
+Galeri,Grid gambar/video dan title glass overlay,styles.css dan script.js,".gallery-grid, .gallery-item, .gallery-item figcaption, .lightbox","Upgrade galeri agar interaktif, gambar bisa diklik preview besar, overlay tetap glass."
+Kontak,Section kontak dan link,styles.css,".contact-section, .contact-grid, .contact-panel","Buat kontak lebih premium dengan layout jelas dan tombol mudah diklik."
+Warna global,Palet warna font radius shadow,styles.css,":root","Ubah tema warna dan visual system dari CSS variables, jangan dari spreadsheet."

@@ -454,75 +454,12 @@ const createMediaFigure = (item, className = "media-item") => {
   return figure;
 };
 
-const styleSettingMap = {
-  style_background: { variable: "--paper" },
-  style_background_alt: { variable: "--paper-strong" },
-  style_text: { variable: "--ink" },
-  style_muted_text: { variable: "--muted" },
-  style_line: { variable: "--line" },
-  style_primary: { variable: "--teal" },
-  style_primary_dark: { variable: "--teal-dark" },
-  style_accent: { variable: "--yellow" },
-  style_coral: { variable: "--coral" },
-  style_blue: { variable: "--blue" },
-  style_card_radius: { variable: "--radius", unit: "px" },
-  style_section_padding: { variable: "--section-padding", unit: "px" },
-  style_hero_grid_line_x: { variable: "--hero-grid-line-x" },
-  style_hero_grid_line_y: { variable: "--hero-grid-line-y" },
-  style_hero_min_height: { variable: "--hero-min-height", unit: "px" },
-  style_hero_padding_top: { variable: "--hero-padding-top", unit: "px" },
-  style_hero_padding_bottom: { variable: "--hero-padding-bottom", unit: "px" },
-  style_hero_gap: { variable: "--hero-gap", unit: "px" },
-  style_hero_title_max_size: { variable: "--hero-title-max-size", unit: "rem" },
-  style_hero_title_mobile_max_size: { variable: "--hero-title-mobile-max-size", unit: "rem" },
-  style_hero_dark_height: { variable: "--hero-dark-height", unit: "%" },
-  style_hero_dark_slope: { variable: "--hero-dark-slope", unit: "%" },
-  style_hero_mobile_padding_top: { variable: "--hero-mobile-padding-top", unit: "px" },
-  style_hero_photo_width: { variable: "--hero-photo-width", unit: "px" },
-  style_hero_photo_min_height: { variable: "--hero-photo-min-height", unit: "px" },
-  style_hero_photo_max_height: { variable: "--hero-photo-max-height", unit: "px" },
-  style_hero_photo_tablet_min_height: { variable: "--hero-photo-tablet-min-height", unit: "px" },
-  style_hero_photo_mobile_min_height: { variable: "--hero-photo-mobile-min-height", unit: "px" },
-  style_hero_photo_mobile_max_height: { variable: "--hero-photo-mobile-max-height", unit: "px" },
-  style_hero_photo_y: { variable: "--hero-photo-y", unit: "px" },
-  style_hero_photo_scale: { variable: "--hero-photo-scale" },
-  style_hero_photo_bg_width: { variable: "--hero-photo-bg-width", unit: "%" },
-  style_hero_photo_bg_right: { variable: "--hero-photo-bg-right", unit: "%" },
-  style_hero_photo_bg_bottom: { variable: "--hero-photo-bg-bottom", unit: "%" },
-  style_hero_photo_bg_color_1: { variable: "--hero-photo-bg-color-1" },
-  style_hero_photo_bg_color_2: { variable: "--hero-photo-bg-color-2" },
-  style_hero_photo_bg_shadow: { variable: "--hero-photo-bg-shadow" },
-  style_brand_photo_y: { variable: "--brand-photo-y", unit: "%" },
-  style_brand_photo_scale: { variable: "--brand-photo-scale" },
-  style_proof_padding: { variable: "--proof-padding", unit: "px" },
-  style_project_cover_height: { variable: "--project-cover-height", unit: "px" },
-  style_gallery_tile_height: { variable: "--gallery-tile-height", unit: "px" }
-};
-
-const normalizeStyleValue = (value, unit) => {
-  const trimmed = String(value || "").trim();
-  if (!trimmed) return "";
-  if (unit && /^-?\d+(\.\d+)?$/.test(trimmed)) return `${trimmed}${unit}`;
-  return trimmed;
-};
-
-const applyStyleSettings = (settings) => {
-  const root = document.documentElement;
-
-  Object.entries(styleSettingMap).forEach(([key, config]) => {
-    const value = normalizeStyleValue(settings[key], config.unit);
-    if (value) root.style.setProperty(config.variable, value);
-  });
-};
-
 const setFields = (settings) => {
   Object.entries(settings).forEach(([key, value]) => {
     document.querySelectorAll(`[data-field="${key}"]`).forEach((node) => {
       node.textContent = value;
     });
   });
-
-  applyStyleSettings(settings);
 
   const email = settings.email || "";
   const whatsapp = settings.whatsapp || settings.phone || "";
@@ -549,12 +486,83 @@ const renderProfileParagraphs = (settings) => {
   );
 };
 
+let counterObserver;
+let revealObserver;
+
+const parseCounterValue = (value) => {
+  const raw = String(value || "").trim();
+  const match = raw.match(/^(.*?)([\d.,]+)(.*)$/);
+  if (!match) return { target: 0, prefix: "", suffix: raw, useGrouping: false };
+
+  const [, prefix, numberText, suffix] = match;
+  const target = Number(numberText.replace(/[.,]/g, "")) || 0;
+  const useGrouping = /[.,]/.test(numberText) && target >= 1000;
+  return { target, prefix, suffix, useGrouping };
+};
+
+const formatCounterValue = (value, config) => {
+  const number = config.useGrouping ? new Intl.NumberFormat("id-ID").format(value) : String(value);
+  return `${config.prefix}${number}${config.suffix}`;
+};
+
+const animateCounter = (node) => {
+  if (node.dataset.counted === "true") return;
+  node.dataset.counted = "true";
+
+  const config = {
+    target: Number(node.dataset.counterTarget || 0),
+    prefix: node.dataset.counterPrefix || "",
+    suffix: node.dataset.counterSuffix || "",
+    useGrouping: node.dataset.counterGrouping === "true"
+  };
+  const duration = 1200;
+  const startedAt = performance.now();
+
+  const tick = (now) => {
+    const progress = Math.min((now - startedAt) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(config.target * eased);
+    node.textContent = formatCounterValue(current, config);
+    if (progress < 1) requestAnimationFrame(tick);
+  };
+
+  requestAnimationFrame(tick);
+};
+
+const prepareCounters = () => {
+  counterObserver?.disconnect();
+  const counters = [...document.querySelectorAll("[data-counter-target]")];
+  if (!("IntersectionObserver" in window)) {
+    counters.forEach(animateCounter);
+    return;
+  }
+
+  counterObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.45 }
+  );
+
+  counters.forEach((counter) => counterObserver.observe(counter));
+};
+
 const renderStats = (stats) => {
   clearAndAppend(
     '[data-render="stats"]',
     stats.map((stat) => {
       const item = createEl("div");
-      item.append(createEl("strong", "", stat.value), createEl("span", "", stat.label));
+      const counter = parseCounterValue(stat.value);
+      const value = createEl("strong", "stat-value", formatCounterValue(0, counter));
+      value.dataset.counterTarget = String(counter.target);
+      value.dataset.counterPrefix = counter.prefix;
+      value.dataset.counterSuffix = counter.suffix;
+      value.dataset.counterGrouping = String(counter.useGrouping);
+      item.append(value, createEl("span", "", stat.label));
       return item;
     })
   );
@@ -780,6 +788,38 @@ const toggleRenderedSections = (data) => {
   toggleElement("#contact, .nav-links a[href='#contact']", data.contacts.length > 0);
 };
 
+const prepareScrollReveals = () => {
+  revealObserver?.disconnect();
+  const targets = [
+    ...document.querySelectorAll(
+      ".section-heading, .split-layout > *, .project-card, .timeline-item, .skill-box, .history-item, .cert-card, .gallery-item, .contact-grid > *, .proof-grid div"
+    )
+  ].filter((element) => !element.hidden);
+
+  targets.forEach((element, index) => {
+    element.classList.add("reveal-on-scroll");
+    element.style.setProperty("--reveal-delay", `${Math.min(index % 4, 3) * 70}ms`);
+  });
+
+  if (!("IntersectionObserver" in window)) {
+    targets.forEach((element) => element.classList.add("is-visible"));
+    return;
+  }
+
+  revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.18 }
+  );
+
+  targets.forEach((element) => revealObserver.observe(element));
+};
+
 const renderPortfolio = (data) => {
   setFields(data.settings);
   renderQuickProof(data.settings);
@@ -794,6 +834,8 @@ const renderPortfolio = (data) => {
   renderGallery(data.gallery);
   renderContacts(data.contacts);
   toggleRenderedSections(data);
+  prepareCounters();
+  prepareScrollReveals();
   setActiveLink();
 };
 
